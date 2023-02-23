@@ -8,8 +8,8 @@ import { EvilIcons, FontAwesome, FontAwesome5, MaterialIcons, MaterialCommunityI
 export default function TabTwoScreen({navigation}) {
   const [to, setTo] = useState('')
   const [from, setFrom] = useState('')
-  const [btc, setBtc] = useState('')
-  const [usd, setUsd] = useState('')
+  const [btc, setBtc] = useState(0.00)
+  const [usd, setUsd] = useState(0.00)
   const [price, setPrice] = useState(0);
 
   useEffect(() => {
@@ -20,20 +20,27 @@ export default function TabTwoScreen({navigation}) {
     const resp = await fetch("https://api.coindesk.com/v1/bpi/currentprice.json");
     const data = await resp.json();
     console.log(data.bpi.USD.rate);
-    setPrice(data.bpi.USD.rate);
-    
+    setPrice(parseFloat(data.bpi.USD.rate.replace(/,/g, '')).toFixed(2));
   };
 
   function send(){
     Alert.alert('sent!')
   }
 
-  function calcBtc(){
-
+  function calcBtc(val){
+    console.log(val)
+    setBtc(val)
+    console.log((val*price).toFixed(6))
+    setUsd((val*price).toFixed(2))
+    // setBtc()
   }
 
-  function calcUsd(){
-    
+  function calcUsd(val){
+    // console.log(val.replace(' USD', ''))
+    // val.replace(' USD', '')
+    setUsd(val)
+    console.log((val/price).toFixed(6))
+    setBtc((val/price).toFixed(6))
   }
 
   return (
@@ -68,7 +75,7 @@ export default function TabTwoScreen({navigation}) {
         placeholder='Amount in BTC'
         value={btc}
         keyboardType='decimal-pad'
-        onChangeText={nextValue => setBtc(nextValue)}
+        onChangeText={nextValue => calcBtc(nextValue)}
       />
       </View>
       <View style={styles.view}>
@@ -79,7 +86,7 @@ export default function TabTwoScreen({navigation}) {
         placeholder='Amount in USD'
         value={usd}
         keyboardType='decimal-pad'
-        onChangeText={nextValue => setUsd(nextValue)}
+        onChangeText={nextValue => calcUsd(nextValue)}
       />
       </View>
       <View style={styles.view}> 
