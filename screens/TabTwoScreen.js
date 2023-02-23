@@ -1,23 +1,39 @@
-import { Alert, StyleSheet, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { Alert, StyleSheet, Dimensions, TouchableWithoutFeedback, Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import React, { useState, useEffect } from 'react';
 import { Text, View } from '../components/Themed';
 import { Input, Button } from '@ui-kitten/components';
-import { EvilIcons, FontAwesome, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { EvilIcons, FontAwesome, FontAwesome5, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function TabTwoScreen({navigation}) {
   const [to, setTo] = useState('')
   const [from, setFrom] = useState('')
   const [btc, setBtc] = useState('')
   const [usd, setUsd] = useState('')
-  const [value, setValue] = useState('');
+  const [price, setPrice] = useState(0);
 
-  // useEffect(() => {
-  //   navigation.navigate('Modal')
-  //   })
+  useEffect(() => {
+		fetchData()
+	}, []);
+
+  const fetchData = async () => {
+    const resp = await fetch("https://api.coindesk.com/v1/bpi/currentprice.json");
+    const data = await resp.json();
+    console.log(data.bpi.USD.rate);
+    setPrice(data.bpi.USD.rate);
+    
+  };
 
   function send(){
     Alert.alert('sent!')
+  }
+
+  function calcBtc(){
+
+  }
+
+  function calcUsd(){
+    
   }
 
   return (
@@ -25,7 +41,7 @@ export default function TabTwoScreen({navigation}) {
      <Text style={styles.title}>Contribute</Text>
 
      <View style={styles.view}>
-      <MaterialIcons color='#fff' size={25} name='send'/>
+      <Pressable onPress={()=> navigation.navigate('Modal')}><MaterialCommunityIcons color='#fff' size={25} name='qrcode-scan'/></Pressable>
      <Input
         style={styles.input}
         size='large'
@@ -51,6 +67,7 @@ export default function TabTwoScreen({navigation}) {
         size='large'
         placeholder='Amount in BTC'
         value={btc}
+        keyboardType='decimal-pad'
         onChangeText={nextValue => setBtc(nextValue)}
       />
       </View>
@@ -61,13 +78,19 @@ export default function TabTwoScreen({navigation}) {
         size='large'
         placeholder='Amount in USD'
         value={usd}
+        keyboardType='decimal-pad'
         onChangeText={nextValue => setUsd(nextValue)}
       />
       </View>
-       <Button style={styles.button} status='primary' size='giant' onPress={()=>send()}>
+      <View style={styles.view}> 
+      <Button style={[styles.button, {margin: 10}]} status='primary' size='giant' onPress={()=>navigation.navigate('Modal')}>
+      Scan
+    </Button>
+      <Button style={styles.button} status='primary' size='giant' onPress={()=>send()}>
       Send
     </Button>
-  
+    </View>
+  {price !== 0 && <Text>Price of Bitcoin: ${price}</Text>}
     </View>
   );
 }
