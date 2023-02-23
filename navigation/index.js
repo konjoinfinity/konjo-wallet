@@ -20,7 +20,7 @@ import TabTwoScreen from '../screens/TabTwoScreen';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+export default function Navigation({ colorScheme }) {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -34,7 +34,7 @@ export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeNa
  * A root stack navigator is often used for displaying modals on top of all other content.
  * https://reactnavigation.org/docs/modal
  */
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator();
 
 function RootNavigator() {
   return (
@@ -52,7 +52,7 @@ function RootNavigator() {
  * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
-const BottomTab = createBottomTabNavigator<RootTabParamList>();
+const BottomTab = createBottomTabNavigator();
 
 function BottomTabNavigator() {
   const colorScheme = useColorScheme();
@@ -66,30 +66,17 @@ function BottomTabNavigator() {
       <BottomTab.Screen
         name="TabOne"
         component={TabOneScreen}
-        options={({ navigation }: RootTabScreenProps<'TabOne'>) => ({
-          title: 'Receive',
+        options={({ navigation }) => ({
+          title: 'Wallet',
           tabBarIcon: ({ color }) => <FIcon name="qrcode" color={color} />,
-          headerRight: () => (
-            <Pressable
-              onPress={() => navigation.navigate('Modal')}
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}>
-              <FontAwesome
-                name="info-circle"
-                size={25}
-                color={Colors[colorScheme].text}
-                style={{ marginRight: 15 }}
-              />
-            </Pressable>
-          ),
         })}
       />
       <BottomTab.Screen
         name="TabTwo"
         component={TabTwoScreen}
+        initialParams={{ from: 'bc1qgyujae80frg0n508gwts08j0m69edfuhrhefep' }}
         options={{
-          title: 'Contribute',
+          title: 'Wallet',
           tabBarIcon: ({ color }) => <FA5Icon name="donate" color={color} />,
         }}
       />
@@ -100,21 +87,12 @@ function BottomTabNavigator() {
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
+function TabBarIcon({name, color}) {
+  return <FontAwesome size={30} style={{ marginBottom: -3 }} name={name} color={color}  />;
 }
-function FA5Icon(props: {
-  name: React.ComponentProps<typeof FontAwesome5>['name'];
-  color: string;
-}) {
-  return <FontAwesome5 size={30} style={{ marginBottom: -3 }} {...props} />;
+function FA5Icon({name, color}) {
+  return <FontAwesome5 size={30} style={{ marginBottom: -3 }} name={name} color={color}  />;
 }
-function FIcon(props: {
-  name: React.ComponentProps<typeof AntDesign>['name'];
-  color: string;
-}) {
-  return <AntDesign size={30} style={{ marginBottom: -3 }} {...props} />;
+function FIcon({name, color}) {
+  return <AntDesign size={30} style={{ marginBottom: -3 }} name={name} color={color} />;
 }

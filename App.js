@@ -17,7 +17,7 @@ export default function App() {
     return (
       <ApplicationProvider {...eva} theme={eva.light}>
       <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} />
+        <Navigation colorScheme={colorScheme}  />
         <StatusBar />
       </SafeAreaProvider>
       </ApplicationProvider>
