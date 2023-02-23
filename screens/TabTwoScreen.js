@@ -46,8 +46,6 @@ export default function TabTwoScreen({route, navigation}) {
   }
 
   function calcUsd(val){
-    // console.log(val.replace(' USD', ''))
-    // val.replace(' USD', '')
     setUsd(val)
     console.log((val/price).toFixed(6))
     setBtc((val/price).toFixed(6))
